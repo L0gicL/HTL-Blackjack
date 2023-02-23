@@ -1,10 +1,7 @@
 # HTL-Blackjack
 School-Project: Online Blackjack
 
-## Contribution
+## Savefile functions
  ```
- Nathanael: Sockets and Online stuff
- Philipp: File IO 
- Jakub: PyQt6 GUI
- Lorenz & Manuel: Game-Logic
+for implementation in server/client 
  ```
