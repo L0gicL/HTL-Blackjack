@@ -66,7 +66,7 @@ while(mode == 0):
         mode = 1
 
 #Game Loop
-while(mode == 2):
+while(mode == 1):
     #send player 1 "(username),it's your turn"
     #player 1 sends draw or stand
     if cardcycle > 52:
@@ -86,7 +86,7 @@ while(mode == 2):
 
     activeplayer = not activeplayer
 
-while(mode == 3):
+while(mode == 2):
 
 
 
