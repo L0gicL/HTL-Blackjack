@@ -1,5 +1,6 @@
 import sys, os
 import random
+import GameLogicClient
 
 from PyQt6 import QtGui
 from PyQt6 import QtCore
@@ -10,7 +11,26 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QPropertyAnimation, QPoint
 from PyQt6.QtGui import QPixmap
 
+'''
+while (mode == 1):
+    if (cnt == 0):
+        playerbet = #amount from gui
+        client.send(playerbet)
+        cnt = 1
 
+    playerturn = client.recieve()
+    if (playerturn == 'turn'):
+        #gui: its your turn
+        playerturn = 'notturn'
+    
+    playeraction = #action from gui either draw or stand
+    client.send(playeraction)
+
+    cardinfo = client.recieve() #cardinfo how
+    #gui cardinfo
+
+    #when game ends set cnt=0
+'''
 
 
 
@@ -439,6 +459,7 @@ class LoginWindow(QMainWindow):
         
         else:
             window.setCurrentWidget(page2)
+            GameLogicClient.login(self.name.text(),self.password.text(),0)
 
 
 
@@ -526,6 +547,7 @@ class RegisterWindow(QMainWindow):
         
         else:
             window.setCurrentWidget(page2)
+            GameLogicClient.register(self.name.text(),self.password.text(),1)
 
 
 

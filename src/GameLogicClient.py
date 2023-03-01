@@ -21,16 +21,13 @@ def login(username, password, logorreg):
     if (checkuser != 'no_user' or checkuser != 'wrong_password'):
         mode = 1
     
-
-def register(username, password, checkpass, logorreg):
+    
+def register(username, password,logorreg):
     #login-0 or register-1 from gui
     client.send(logorreg)
-    if (password == checkpass):
-        client.send(username)
-        client.send(hashlib.sha256(password.encode()).hexdigest()) 
-        mode = 1
-    else:
-        return("password isn't the same") #show on gui
+    client.send(username)
+    client.send(hashlib.sha256(password.encode()).hexdigest()) 
+    mode = 1
 
 
 
