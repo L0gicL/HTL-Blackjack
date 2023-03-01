@@ -71,18 +71,23 @@ def showendscreen(winner):
     else:
         #send win to winner lose to loser
         #showleaderboard(need fileIO module)
+        pass
 
 def deleteuser(user):
     #need fileIO module
+    pass
         
 def createuser(user):
     #need fileIO module
+    pass
 
 def updateuser(user):
     #need fileIO module
+    pass
 
 def loginuser(user):
     #need fileIO module
+    pass
 
 '''
 pull data from save file
@@ -97,11 +102,11 @@ while(mode == 0):
         if (loginornew == 0):
             inputusername = server.receive(Clientconnections[i])
             if (inputusername in usernames):
-                server.send(Clientconnections[i],'user_ok')
                 password = getpassforuser(inputusername)
                 inputpassword = server.receive(Clientconnections[i]) #get input for password from network
                 if (inputpassword == password):
                     players[i] = player(inputusername,inputpassword)
+                    server.send(Clientconnections[i],'user_ok')
                     break
             else:
                 server.send(Clientconnections[i],'no_user')
