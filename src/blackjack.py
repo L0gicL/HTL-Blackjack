@@ -111,7 +111,7 @@ class StartMenuWindow(QMainWindow):
         #print(self.start_menu_buttons.index(clicked_button))
 
         if(self.start_menu_buttons.index(clicked_button) == 0):
-            window.setCurrentWidget(page6)
+            window.setCurrentWidget(page8)
 
         if(self.start_menu_buttons.index(clicked_button) == 1):
             window.setCurrentWidget(page3)
@@ -480,6 +480,145 @@ class LoginWindow(QMainWindow):
 
 
 
+class RegisterWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        #set title
+        self.setWindowTitle("Blackjack")
+
+        #set window size
+        self.setFixedSize(QSize(1000, 700))
+
+        #create grid
+        self.Layout = QGridLayout()
+
+
+
+        self.return_button = QPushButton("RETURN")
+        self.return_button.clicked.connect(self.exit)
+        self.Layout.addWidget(self.return_button,3,0)
+
+        #create OK-button
+        self.ok_button = QPushButton("OK")
+        self.ok_button.clicked.connect(self.ok)
+        self.Layout.addWidget(self.ok_button,3,1)
+
+
+
+
+        #create inputs Name, E-Mail
+        self.name = QLineEdit(self)
+        self.name.setMaxLength(10)
+        self.password = QLineEdit(self)
+        self.password.setMaxLength(16)
+        self.password.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password2 = QLineEdit(self)
+        self.password2.setMaxLength(16)
+        self.password2.setEchoMode(QLineEdit.EchoMode.Password)
+
+        counter = 0
+        for i in ["name", "password", "password 2"]:
+            lbl = QLabel(i)
+            font = lbl.font()
+            font.setPointSize(18)
+            lbl.setFont(font)
+            self.Layout.addWidget(lbl, counter, 0)
+            counter = counter + 1
+        
+        self.Layout.addWidget(self.name,0,1)
+        self.Layout.addWidget(self.password,1,1)
+        self.Layout.addWidget(self.password2,2,1)
+
+        widget = QWidget()
+        widget.setLayout(self.Layout)
+        self.setCentralWidget(widget)
+
+
+    def exit(self):
+        window.setCurrentWidget(page1)
+
+
+    def ok(self):
+        if(self.name.text() == "" or self.password.text() == "" or self.password2.text() == ""):
+            message = QMessageBox()
+            message.setIcon(QMessageBox.Icon.Question)
+            message.setWindowTitle("Error-Window")
+            message.setText("Alles muss ausgefüllt sein!")
+            message.exec()
+            return
+        
+        elif(self.password.text() != self.password2.text()):
+            message = QMessageBox()
+            message.setIcon(QMessageBox.Icon.Critical)
+            message.setWindowTitle("Error-Window")
+            message.setText("Passwörter müssen gleich sein!")
+            message.exec()
+            return
+        
+        else:
+            window.setCurrentWidget(page2)
+
+
+
+
+
+
+
+
+
+
+class RegOrLogWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        #set title
+        self.setWindowTitle("Blackjack")
+
+        #set window size
+        self.setFixedSize(QSize(1000, 700))
+
+        #create grid
+        self.Layout = QGridLayout()
+
+
+        self.register_button = QPushButton("REGISTER")
+        self.register_button.clicked.connect(self.register)
+        self.Layout.addWidget(self.register_button,0,0)
+
+        self.login_button = QPushButton("LOGIN")
+        self.login_button.clicked.connect(self.login)
+        self.Layout.addWidget(self.login_button,0,1)
+
+        self.return_button = QPushButton("RETURN")
+        self.return_button.clicked.connect(self.exit)
+        self.Layout.addWidget(self.return_button,1,1)
+
+
+
+        widget = QWidget()
+        widget.setLayout(self.Layout)
+        self.setCentralWidget(widget)
+    
+
+    def register(self):
+        window.setCurrentWidget(page7)
+
+    def login(self):
+        window.setCurrentWidget(page6)
+
+    def exit(self):
+        window.setCurrentWidget(page1)
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -528,6 +667,14 @@ window.addWidget(page5)
 
 page6 = LoginWindow()
 window.addWidget(page6)
+
+page7 = RegisterWindow()
+window.addWidget(page7)
+
+page8 = RegOrLogWindow()
+window.addWidget(page8)
+
+
 
 
 #create window
