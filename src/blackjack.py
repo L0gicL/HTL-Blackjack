@@ -422,9 +422,9 @@ class LoginWindow(QMainWindow):
 
         #create inputs Name, E-Mail
         self.name = QLineEdit(self)
-        self.name.setMaxLength(10)
+        self.name.setMaxLength(25)
         self.password = QLineEdit(self)
-        self.password.setMaxLength(16)
+        self.password.setMaxLength(128)
         self.password.setEchoMode(QLineEdit.EchoMode.Password)
 
         counter = 0
@@ -498,12 +498,12 @@ class RegisterWindow(QMainWindow):
 
         #create inputs Name, E-Mail
         self.name = QLineEdit(self)
-        self.name.setMaxLength(10)
+        self.name.setMaxLength(25)
         self.password = QLineEdit(self)
-        self.password.setMaxLength(16)
+        self.password.setMaxLength(128)
         self.password.setEchoMode(QLineEdit.EchoMode.Password)
         self.password2 = QLineEdit(self)
-        self.password2.setMaxLength(16)
+        self.password2.setMaxLength(128)
         self.password2.setEchoMode(QLineEdit.EchoMode.Password)
 
         counter = 0
@@ -594,7 +594,7 @@ class RegOrLogWindow(QMainWindow):
         self.address = QLineEdit(self)
         self.Layout.addWidget(self.address,1,1)
 
-        self.confirm_button = QPushButton("CONFIRM")
+        self.confirm_button = QPushButton("CONNECT")
         self.confirm_button.setFixedSize(180, 40)
         self.confirm_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.confirm_button.clicked.connect(self.confirm)
@@ -625,7 +625,7 @@ class RegOrLogWindow(QMainWindow):
         window.setCurrentWidget(page1)
 
     def confirm(self):
-        ip = self.address.text()
+        GameLogicClient.connect_to_server(self.address.text())
 
 
 
