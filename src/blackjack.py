@@ -31,7 +31,7 @@ class StartMenuWindow(QMainWindow):
         
         
         self.label = QLabel(self)
-        pixmap = QPixmap('logo.png')
+        pixmap = QPixmap('images\other\logo.png')
         pixmap = pixmap.scaled(700, 200)
         self.label.setPixmap(pixmap)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -123,7 +123,7 @@ class MoneyWindow(QMainWindow):
             else:
                 self.Layout.addWidget(self.chosen_button,1,i-5)
             self.chosen_button.setFixedSize(90, 90)
-            self.chosen_button.setIcon(QtGui.QIcon(f"images/tokens/{self.token_list[i]}.png"))
+            self.chosen_button.setIcon(QtGui.QIcon(f"images\\tokens\{self.token_list[i]}.png"))
             self.chosen_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
             self.chosen_button.setIconSize(QtCore.QSize(90,90))
             #self.chosen_button.clicked.connect(self.button_clicked)
@@ -146,7 +146,7 @@ class MoneyWindow(QMainWindow):
             else:
                 self.Layout.addWidget(self.token_button,5,i-5)
             self.token_button.setFixedSize(105, 105)
-            self.token_button.setIcon(QtGui.QIcon(f"images/tokens/{self.token_list[i]}.png"))
+            self.token_button.setIcon(QtGui.QIcon(f"images\\tokens\{self.token_list[i]}.png"))
             self.token_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
             self.token_button.setIconSize(QtCore.QSize(105,105))
             #self.token_button.clicked.connect(self.button_clicked)
