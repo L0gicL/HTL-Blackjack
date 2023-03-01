@@ -1,10 +1,14 @@
 from random import shuffle
+from NetworkModule import Server_Net
 
+IP = '0.0.0.0'
+PORT = 42069
 mode = 0 # 0 = login, 1 = playing, 2 = game finished
 cardcycle = 1
 activeplayer = True
 draw = bool
 players = [0,1]
+Clientconnections =[]
 cards = []
 cardvalue = []
 cardorder = []
@@ -63,6 +67,7 @@ def handlewin(player):
 def showendscreen(winner):
     if(winner == 2):
         #send draw
+        pass
     else:
         #send win to winner lose to loser
         #showleaderboard(need fileIO module)
@@ -70,32 +75,40 @@ def showendscreen(winner):
 def deleteuser(user):
     #need fileIO module
         
-def adduser(user):
+def createuser(user):
     #need fileIO module
 
 def updateuser(user):
     #need fileIO module
 
+def loginuser(user):
+    #need fileIO module
+
 '''
 pull data from save file
 '''
-
+server = Server_Net()
 #Login Process
 while(mode == 0):
     for i in range():
+        Clientconnections[i] = server.server_Listen(IP,PORT)
+        loginornew = server.receive(Clientconnections[i])    # if login-> 0 if new -> 1
         #get login variable from network
-        #get input for username from network
         if (loginornew == 0):
+            inputusername = server.receive(Clientconnections[i])
             if (inputusername in usernames):
-                #get input for password from network
+                server.send(Clientconnections[i],'user_ok')
                 password = getpassforuser(inputusername)
+                inputpassword = server.receive(Clientconnections[i]) #get input for password from network
                 if (inputpassword == password):
                     players[i] = player(inputusername,inputpassword)
                     break
+            else:
+                server.send(Clientconnections[i],'no_user')
+                continue
         elif (loginornew == 1):
-            #get input for username from network
-            #get input for password from network
-            #input to confirm password and only let through if both are the same
+            inputusername = server.receive(Clientconnections[i]) #get input for username from network
+            inputpassword = server.receive(Clientconnections[i]) #get input for password from network
             players[i] = player(inputusername,inputpassword) 
             adduser(players[i])
             break
@@ -108,18 +121,14 @@ betpool = 0
 #Game Loop
 while(mode == 1):     
     if (turn <= 2):
-        #get betamount from players
-        if (activeplayer):
-            players[0].bet = betamount
-            players[0].money -= betamount
-        elif (not activeplayer):
-            players[1].bet = betamount
-            players[1].money -= betamount 
+        betamount = server.receive(Clientconnections[turn-1])
+        players[activeplayer].bet = betamount
+        players[activeplayer].money -= betamount
         betpool += betamount
         turn += 1
     
-    #send player 1 "(username),it's your turn"
-    #player 1 sends draw or stand
+    server.send(Clientconnections[activeplayer],'turn')    #send player "(username),it's your turn"
+    draw = server.receive(Clientconnections[activeplayer]) #player sends draw or stand
     if cardcycle > 52:
         deckempty()
 
@@ -131,8 +140,9 @@ while(mode == 1):
             players[0].score += int(cardvalue[cardpos])
         elif (not activeplayer):
             players[1].score += int(cardvalue[cardpos])
-        determineCardType(cardpos)
-        #send card drawn with score to activeplayer
+        Cardinfo = determineCardType(cardpos)
+        Cardinfo.append()
+        server.send(Clientconnections[activeplayer],Cardinfo)  #send card drawn with score to activeplayer[colour,type,value]
     if(not draw):
         if (activeplayer):
             players[0].stand = True
