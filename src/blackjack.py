@@ -582,13 +582,25 @@ class RegOrLogWindow(QMainWindow):
         self.login_button.setFixedSize(270, 90)
         self.login_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.login_button.clicked.connect(self.login)
-        self.Layout.addWidget(self.login_button,0,1)
+        self.Layout.addWidget(self.login_button,0,2)
+
+
+        self.lbl = QLabel("IP-Address:")
+        font = self.lbl.font()
+        font.setPointSize(18)
+        self.lbl.setFont(font)
+        self.Layout.addWidget(self.lbl,1,0)
+
+        self.address = QLineEdit(self)
+        self.Layout.addWidget(self.address,1,1)
+
+
 
         self.return_button = QPushButton("RETURN")
         self.return_button.setFixedSize(160, 40)
         self.return_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.return_button.clicked.connect(self.exit)
-        self.Layout.addWidget(self.return_button,1,1)
+        self.Layout.addWidget(self.return_button,2,2)
 
 
 
