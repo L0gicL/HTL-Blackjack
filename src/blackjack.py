@@ -572,6 +572,12 @@ class RegOrLogWindow(QMainWindow):
         self.address = QLineEdit(self)
         self.Layout.addWidget(self.address,1,1)
 
+        self.confirm_button = QPushButton("CONFIRM")
+        self.confirm_button.setFixedSize(180, 40)
+        self.confirm_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
+        self.confirm_button.clicked.connect(self.confirm)
+        self.Layout.addWidget(self.confirm_button,1,2,Qt.AlignmentFlag.AlignCenter)
+
 
 
         self.return_button = QPushButton("RETURN")
@@ -595,6 +601,9 @@ class RegOrLogWindow(QMainWindow):
 
     def exit(self):
         window.setCurrentWidget(page1)
+
+    def confirm(self):
+        ip = self.address.text()
 
 
 
