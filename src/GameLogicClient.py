@@ -5,35 +5,31 @@ client = Client_Net()
 client.client_Connect(IP,42069) #IP von Server
 
 mode = 0 #login/register-0, playing-1
-logorreg = #login-0 or register-1 from gui
+
 checkuser = 'no_user'
 playerbet = 0
 playeraction = 'action'
 cnt = 0
 
-while (mode == 0):
-    client.send(mode) 
-    if (logorreg == 0):
-        username = #username from gui
-        password = #password from gui
-        client.send(username)
-        client.send(hashlib.sha256(password.encode()).hexdigest())
-        checkuser = client.recieve()
-        if (checkuser != 'no_user' or checkuser != 'wrong_password'):
-            mode = 1
-            break
+def login(username, password, logorreg):
+    #login-0 or register-1 from gui
+    client.send(logorreg)
+    client.send(username)
+    client.send(hashlib.sha256(password.encode()).hexdigest())
+    checkuser = client.recieve()
+    if (checkuser != 'no_user' or checkuser != 'wrong_password'):
+        mode = 1
+    
 
-    elif (logorreg == 1):
-        username = #username from gui
-        password = #password from gui
-        checkpass = #check password from gui
-        if (password == checkpass):
-            client.send(username)
-            client.send(hashlib.sha256(password.encode()).hexdigest())
-            mode = 1
-            break 
-        else:
-            #to gui password not same
+def register(username, password, checkpass, logorreg):
+    #login-0 or register-1 from gui
+    client.send(logorreg)
+    if (password == checkpass):
+        client.send(username)
+        client.send(hashlib.sha256(password.encode()).hexdigest()) 
+        mode = 1
+    else:
+        return("password isn't the same") #show on gui
 
 
 while (mode == 1):
@@ -54,5 +50,3 @@ while (mode == 1):
     #gui cardinfo
 
     #when game ends set cnt=0
-    
-
