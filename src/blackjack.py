@@ -111,7 +111,7 @@ class StartMenuWindow(QMainWindow):
         #print(self.start_menu_buttons.index(clicked_button))
 
         if(self.start_menu_buttons.index(clicked_button) == 0):
-            window.setCurrentWidget(page2)
+            window.setCurrentWidget(page6)
 
         if(self.start_menu_buttons.index(clicked_button) == 1):
             window.setCurrentWidget(page3)
@@ -407,7 +407,7 @@ class GameWindow(QMainWindow):
 
 
 
-"""
+
 
 class LoginWindow(QMainWindow):
     def __init__(self):
@@ -422,7 +422,65 @@ class LoginWindow(QMainWindow):
         #create grid
         self.Layout = QGridLayout()
 
-"""
+
+
+        self.return_button = QPushButton("RETURN")
+        self.return_button.clicked.connect(self.exit)
+        self.Layout.addWidget(self.return_button,2,0)
+
+        #create OK-button
+        self.ok_button = QPushButton("OK")
+        self.ok_button.clicked.connect(self.ok)
+        self.Layout.addWidget(self.ok_button,2,1)
+
+
+
+
+        #create inputs Name, E-Mail
+        self.name = QLineEdit(self)
+        self.name.setMaxLength(10)
+        self.password = QLineEdit(self)
+        self.password.setMaxLength(16)
+        self.password.setEchoMode(QLineEdit.EchoMode.Password)
+
+        counter = 0
+        for i in ["name", "password"]:
+            lbl = QLabel(i)
+            font = lbl.font()
+            font.setPointSize(18)
+            lbl.setFont(font)
+            self.Layout.addWidget(lbl, counter, 0)
+            counter = counter + 1
+        
+        self.Layout.addWidget(self.name,0,1)
+        self.Layout.addWidget(self.password,1,1)
+
+        widget = QWidget()
+        widget.setLayout(self.Layout)
+        self.setCentralWidget(widget)
+
+
+    def exit(self):
+        window.setCurrentWidget(page1)
+
+
+    def ok(self):
+        if(self.name.text() == "" or self.password.text() == ""):
+            message = QMessageBox()
+            message.setIcon(QMessageBox.Icon.Question)
+            message.setWindowTitle("Error-Window")
+            message.setText("Alles muss ausgefüllt sein!")
+            message.exec()
+            return
+        
+        else:
+            window.setCurrentWidget(page2)
+
+
+
+
+
+
 
 
 
