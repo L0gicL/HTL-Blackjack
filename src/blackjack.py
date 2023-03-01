@@ -29,27 +29,6 @@ class StartMenuWindow(QMainWindow):
         self.Layout = QGridLayout()
 
         
-
-
-        """
-        self.pic = QLabel()
-        self.pic.setGeometry(10, 10, 4, 1)
-        self.pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/test.png"))
-        self.Layout.addWidget(self.pic)
-        """
-
-        """
-        self.image = QLabel()
-        self.image.setGeometry(50, 40, 25, 25)
-        pixmap = QPixmap("test.png")
-        self.image.setPixmap(pixmap)
-        self.Layout.addWidget(self.image)
-        """
-        
-
-
-
-        
         
         self.label = QLabel(self)
         pixmap = QPixmap('logo.png')
@@ -58,25 +37,6 @@ class StartMenuWindow(QMainWindow):
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.Layout.addWidget(self.label)
         
-        """
-
-        self.label = QWidget(self)
-        #pixmap = pixmap.scaled(700, 200)
-        self.label.setStyleSheet("background-image: url(logo.png)")
-        self.label.resize(100, 100)
-        #self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.Layout.addWidget(self.label)
-
-        """
-
-        
-        """
-        self.empty_space_01 = QWidget()
-        self.empty_space_01.setFixedSize(1,300)
-        self.Layout.addWidget(self.empty_space_01,0,0)
-        """
-
-
 
 
         self.start_menu = ["NEW GAME","LEADERBOARD","CREDITS","QUIT"]
@@ -425,11 +385,15 @@ class LoginWindow(QMainWindow):
 
 
         self.return_button = QPushButton("RETURN")
+        self.return_button.setFixedSize(160, 40)
+        self.return_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.return_button.clicked.connect(self.exit)
         self.Layout.addWidget(self.return_button,2,0)
 
         #create OK-button
         self.ok_button = QPushButton("OK")
+        self.ok_button.setFixedSize(160, 40)
+        self.ok_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.ok_button.clicked.connect(self.ok)
         self.Layout.addWidget(self.ok_button,2,1)
 
@@ -496,11 +460,15 @@ class RegisterWindow(QMainWindow):
 
 
         self.return_button = QPushButton("RETURN")
+        self.return_button.setFixedSize(160, 40)
+        self.return_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.return_button.clicked.connect(self.exit)
         self.Layout.addWidget(self.return_button,3,0)
 
         #create OK-button
         self.ok_button = QPushButton("OK")
+        self.ok_button.setFixedSize(160, 40)
+        self.ok_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.ok_button.clicked.connect(self.ok)
         self.Layout.addWidget(self.ok_button,3,1)
 
@@ -583,14 +551,20 @@ class RegOrLogWindow(QMainWindow):
 
 
         self.register_button = QPushButton("REGISTER")
+        self.register_button.setFixedSize(270, 90)
+        self.register_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.register_button.clicked.connect(self.register)
         self.Layout.addWidget(self.register_button,0,0)
 
         self.login_button = QPushButton("LOGIN")
+        self.login_button.setFixedSize(270, 90)
+        self.login_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.login_button.clicked.connect(self.login)
         self.Layout.addWidget(self.login_button,0,1)
 
         self.return_button = QPushButton("RETURN")
+        self.return_button.setFixedSize(160, 40)
+        self.return_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.return_button.clicked.connect(self.exit)
         self.Layout.addWidget(self.return_button,1,1)
 
