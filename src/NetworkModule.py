@@ -38,6 +38,10 @@ class Server_Net(Network):
     def __init__(self):
         super().__init__()
     
+    #send function for server, to choose client connection
+    def send(self,conn,data):
+        conn.send(pickle.dumps(data))
+    
     #function to listen for incomming connections from clients
     def server_Listen(self,ip,port):
         self.connection.bind((ip,port))
