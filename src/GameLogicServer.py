@@ -14,7 +14,7 @@ cards = []
 cardvalue = []
 cardorder = []
 winscore = 21
-path = 
+path = 'savefile.txt'
 
 #Class init
 class player:
