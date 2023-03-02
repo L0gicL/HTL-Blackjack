@@ -50,7 +50,10 @@ def deckempty():
 
 def checkgamestate():
     for i in players:
-        if i.score > 21:
+        if (i.score == 21):
+            i.stand = True
+            return 2
+        elif i.score > 21:
             i.lost = True
             return 2
         else:
@@ -67,12 +70,13 @@ def handlewin(player):
             if (i.money <= 0):
                 safefile.delete_user(path,i.username)
             else:
-                safefile.update_user(path,i.suername)
+                safefile.update_user(path,i.username)
     showendscreen(player)
 
 def showendscreen(winner):
     if(winner == 2):
-        pass
+        server.send(Clientconnections[0],'2')
+        server.send(Clientconnections[1],'2')
     else:
         #send win to winner lose to loser
         for i in players:
@@ -142,7 +146,7 @@ while(mode == 1):
             players[1].score += int(cardvalue[cardpos])
         Cardinfo = determineCardType(cardpos)
         Cardinfo.append(cardpos % 13)
-        Cardinfo.append(cardvalue[cardpos])
+        Cardinfo.append(players[activeplayer].score)
         server.send(Clientconnections[activeplayer],Cardinfo)  #send card drawn with score to activeplayer[colour,type,value]
     if(not draw):
         if (activeplayer):

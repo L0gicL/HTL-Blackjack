@@ -364,6 +364,17 @@ class GameWindow(QMainWindow):
         self.game()
         GameLogicClient.client.send(True)
         cardinfo = GameLogicClient.client.receive()
+        cardcolour = cardinfo[0]
+        cardtype = cardinfo [1]
+        cardvalue = cardinfo [2]
+        if (cardvalue >= 21):
+            win_check = GameLogicClient.client.recieve()
+            if (win_check == '1'):
+                print("Won")
+            elif (win_check == '0'):
+                print("Lost")
+            else:
+                print("Draw")
         print(cardinfo)#debug
         #need info how cards are saved
 
@@ -377,6 +388,14 @@ class GameWindow(QMainWindow):
 
         self.game()
         GameLogicClient.client.send(False)
+        win_check = GameLogicClient.client.recieve()
+        if (win_check == '1'):
+            print("Won")
+        elif (win_check == '0'):
+            print("Lost")
+        else:
+            print("Draw")
+
 
 
 
@@ -458,11 +477,7 @@ class LoginWindow(QMainWindow):
             GameLogicClient.login(self.name.text(),self.password.text(),0)
             checkuser = GameLogicClient.client.receive()
             if (checkuser == 'no_user'):
-                make_message_box("User does not exist!","Error")
-                #open window no user register first
-            elif (checkuser == 'wrong_password'):
-                make_message_box("Password is incorrect!","Error")
-                #open window wrong password
+                make_message_box("Try again!","Error")
             elif (checkuser == 'user_ok'):
                 window.setCurrentWidget(page2)
                 #go on with game
