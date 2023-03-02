@@ -1,7 +1,7 @@
 '''
 Safile Functions for GameLogicServer and GameLogicClient
 Philipp Frenzel
-02.02.2023
+02.03.2023
 '''
 
 def create_user(pathtofile, name, password):
