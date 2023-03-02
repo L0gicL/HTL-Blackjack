@@ -9,7 +9,7 @@ playerbet = 0
 playeraction = 'action'
 cnt = 0
 
-def connecttoserver(IP):
+def connect_to_server(IP):
     client.client_Connect(IP,42069) #IP von Server
 
 def login(username, password, logorreg):
