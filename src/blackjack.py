@@ -12,24 +12,19 @@ from PyQt6.QtCore import QPropertyAnimation, QPoint
 from PyQt6.QtGui import QPixmap
 
 '''
-while (mode == 1):
     if (cnt == 0):
-        playerbet = #amount from gui
-        client.send(playerbet)
-        cnt = 1
+        #check if money bigger than bet_money
+        
+        player_money = client.receive()
+        if (bet_money < player_money):
+            client.send(bet_money)
+        else:
+            #gui less money than bet  
 
-    playerturn = client.recieve()
-    if (playerturn == 'turn'):
-        #gui: its your turn
-        playerturn = 'notturn'
-    
-    playeraction = #action from gui either draw or stand
-    client.send(playeraction)
-
-    cardinfo = client.recieve() #cardinfo how
+    cardinfo = client.receive() #cardinfo how
     #gui cardinfo
 
-    #when game ends set cnt=0
+    #win or loss still missing
 '''
 
 
@@ -215,7 +210,9 @@ class MoneyWindow(QMainWindow):
 
 
     def button_clicked(self):
-        window.setCurrentWidget(page5)
+        window.setCurrentWidget(page9)
+        if(GameLogicClient.client.receive() == "turn"):
+            window.setCurrentWidget(page5)
 
 
 
@@ -370,6 +367,7 @@ class GameWindow(QMainWindow):
         self.player_card.setIconSize(QtCore.QSize(70,100))
         self.player_cards.append(self.player_card)
         self.game()
+        GameLogicClient.client.send(True)
 
 
 
@@ -380,6 +378,7 @@ class GameWindow(QMainWindow):
         self.dealer_cards.append(self.dealer_card)
 
         self.game()
+        GameLogicClient.client.send(False)
 
 
 
@@ -460,6 +459,16 @@ class LoginWindow(QMainWindow):
         else:
             window.setCurrentWidget(page2)
             GameLogicClient.login(self.name.text(),self.password.text(),0)
+            checkuser = GameLogicClient.client.receive()
+            if (checkuser == 'no_user'):
+                #open window no user register first
+                pass
+            elif (checkuser == 'wrong_password'):
+                #open window wrong password
+                pass
+            elif (checkuser == 'user_ok'):
+                #go on with game
+                pass
 
 
 
@@ -547,7 +556,12 @@ class RegisterWindow(QMainWindow):
         
         else:
             window.setCurrentWidget(page2)
-            GameLogicClient.register(self.name.text(),self.password.text(),1)
+            if (self.name.text() != self.password.text()):
+                GameLogicClient.register(self.name.text(),self.password.text(),1)
+            else:
+                #message 'username & password shouldnt be the same
+                return
+            
 
 
 
@@ -682,6 +696,8 @@ window.addWidget(page7)
 page8 = RegOrLogWindow()
 window.addWidget(page8)
 
+page9 = #"Wait for your turn" window
+window.addWidget(page9)
 
 
 

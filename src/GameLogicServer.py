@@ -108,9 +108,13 @@ while(mode == 0):
                     players[i] = player(inputusername,inputpassword)
                     server.send(Clientconnections[i],'user_ok')
                     break
+                else:
+                    server.send(Clientconnections[i],'wrong_password')
+                    continue
             else:
                 server.send(Clientconnections[i],'no_user')
                 continue
+
         elif (loginornew == 1):
             inputusername = server.receive(Clientconnections[i]) #get input for username from network
             inputpassword = server.receive(Clientconnections[i]) #get input for password from network
@@ -126,6 +130,7 @@ betpool = 0
 #Game Loop
 while(mode == 1):     
     if (turn <= 2):
+        server.send(players[activeplayer].money)
         betamount = server.receive(Clientconnections[turn-1])
         players[activeplayer].bet = betamount
         players[activeplayer].money -= betamount

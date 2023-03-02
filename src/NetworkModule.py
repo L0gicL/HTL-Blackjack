@@ -16,8 +16,8 @@ class Network:
     def send(self,data):
         self.connection.send(pickle.dumps(data))
     
-    #data recieve function
-    def recieve(self,conn,buffer_size=1024):
+    #data receive function
+    def receive(self,conn,buffer_size=1024):
         while True:
             data = conn[0].recv(buffer_size)
             if not data:
@@ -30,7 +30,7 @@ class Client_Net(Network):
         super().__init__()
     
     #recieve function for client without the need for a connection argument
-    def recieve(self, buffer_size=1024):
+    def receive(self, buffer_size=1024):
         return super().recieve([self.connection], buffer_size)
     
     #function to connect to server

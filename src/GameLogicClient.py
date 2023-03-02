@@ -17,9 +17,7 @@ def login(username, password, logorreg):
     client.send(logorreg)
     client.send(username)
     client.send(hashlib.sha256(password.encode()).hexdigest())
-    checkuser = client.recieve()
-    if (checkuser != 'no_user' or checkuser != 'wrong_password'):
-        mode = 1
+    
     
     
 def register(username, password,logorreg):
@@ -27,7 +25,6 @@ def register(username, password,logorreg):
     client.send(logorreg)
     client.send(username)
     client.send(hashlib.sha256(password.encode()).hexdigest()) 
-    mode = 1
 
 
 
