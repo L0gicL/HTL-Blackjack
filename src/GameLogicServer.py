@@ -1,5 +1,6 @@
 from random import shuffle
 from NetworkModule import Server_Net
+import safefile
 
 IP = '0.0.0.0'
 PORT = 42069
@@ -60,7 +61,7 @@ def handlewin(player):
             if (i == player):
                 i.money += betpool
             if (i.money <= 0):
-                deleteuser(i)
+                delete_user(i.username)
 
     showendscreen(player)
 
@@ -71,23 +72,9 @@ def showendscreen(winner):
     else:
         #send win to winner lose to loser
         #showleaderboard(need fileIO module)
+        server.send(user_leaderboard_wins())
         pass
 
-def deleteuser(user):
-    #need fileIO module
-    pass
-        
-def createuser(user):
-    #need fileIO module
-    pass
-
-def updateuser(user):
-    #need fileIO module
-    pass
-
-def loginuser(user):
-    #need fileIO module
-    pass
 
 '''
 pull data from save file

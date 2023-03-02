@@ -2,25 +2,12 @@ import sys, os
 import random
 import GameLogicClient
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
 from PyQt6 import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QPropertyAnimation, QPoint
 from PyQt6.QtGui import QPixmap
 
 '''
-    if (cnt == 0):
-        #check if money bigger than bet_money
-        
-        player_money = client.receive()
-        if (bet_money < player_money):
-            client.send(bet_money)
-        else:
-            #gui less money than bet  
-
     cardinfo = client.receive() #cardinfo how
     #gui cardinfo
 
@@ -183,7 +170,7 @@ class MoneyWindow(QMainWindow):
         self.Layout.addWidget(self.deal_button,5,6)
         self.deal_button.setFixedSize(300, 120)
         self.deal_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
-        self.deal_button.clicked.connect(self.button_clicked)
+        self.deal_button.clicked.connect(lambda: self.button_clicked(your_money, bet_money))
 
         self.my_money = QLabel(f"{your_money}$")
         font = self.my_money.font()
@@ -209,11 +196,18 @@ class MoneyWindow(QMainWindow):
         self.setCentralWidget(self.widget)
 
 
-    def button_clicked(self):
-        window.setCurrentWidget(page9)
-        if(GameLogicClient.client.receive() == "turn"):
-            window.setCurrentWidget(page5)
-
+    def button_clicked(self,player_money, bet_money):
+        if (bet_money < player_money):
+            GameLogicClient.client.send(bet_money)
+        else:
+            make_message_box("You don't have enough money to make that bet","Not enough money")
+        #TODO special window for waiting
+        your_turn = True
+        while(your_turn):
+            make_message_box("Waiting for other player","Not your turn")
+            if(GameLogicClient.client.receive() == "turn"):
+                your_turn = False
+                window.setCurrentWidget(page5)
 
 
 
@@ -287,6 +281,7 @@ class CreditsWindow(QMainWindow):
 
 
     def button_clicked(self):
+        make_message_box("test1","test2")
         window.setCurrentWidget(page1)
 
 
@@ -368,6 +363,9 @@ class GameWindow(QMainWindow):
         self.player_cards.append(self.player_card)
         self.game()
         GameLogicClient.client.send(True)
+        cardinfo = GameLogicClient.client.receive()
+        print(cardinfo)#debug
+        #need info how cards are saved
 
 
 
@@ -457,19 +455,17 @@ class LoginWindow(QMainWindow):
             return
         
         else:
-            window.setCurrentWidget(page2)
             GameLogicClient.login(self.name.text(),self.password.text(),0)
             checkuser = GameLogicClient.client.receive()
             if (checkuser == 'no_user'):
+                make_message_box("User does not exist!","Error")
                 #open window no user register first
-                pass
             elif (checkuser == 'wrong_password'):
+                make_message_box("Password is incorrect!","Error")
                 #open window wrong password
-                pass
             elif (checkuser == 'user_ok'):
+                window.setCurrentWidget(page2)
                 #go on with game
-                pass
-
 
 
 
@@ -559,6 +555,7 @@ class RegisterWindow(QMainWindow):
             if (self.name.text() != self.password.text()):
                 GameLogicClient.register(self.name.text(),self.password.text(),1)
             else:
+                make_message_box("Username and Password can't be the same","ERROR")
                 #message 'username & password shouldnt be the same
                 return
             
@@ -650,7 +647,11 @@ class RegOrLogWindow(QMainWindow):
 
 
 
-
+def make_message_box(msg:str,header:str):
+    message = QMessageBox()
+    message.setWindowTitle(header)
+    message.setText(msg)
+    message.exec()
 
 
 
