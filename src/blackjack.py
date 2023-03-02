@@ -630,8 +630,11 @@ class RegOrLogWindow(QMainWindow):
 
 
 
-
-
+hearts = ["1_h.png", "2_h.png", "3_h.png", "4_h.png", "5_h.png", "6_h.png", "7_h.png", "8_h.png", "9_h.png", "10_h.png", "11_h.png", "12_h.png", "13_h.png", ]
+spades = ["1_s.png", "2_s.png", "3_s.png", "4_s.png", "5_s.png", "6_s.png", "7_s.png", "8_s.png", "9_s.png", "10_s.png", "11_s.png", "12_s.png", "13_s.png", ]
+clubs = ["1_c.png", "2_c.png", "3_c.png", "4_c.png", "5_c.png", "6_c.png", "7_c.png", "8_c.png", "9_c.png", "10_c.png", "11_c.png", "12_c.png", "13_c.png", ]
+diamonds = ["1_d.png", "2_d.png", "3_d.png", "4_d.png", "5_d.png", "6_d.png", "7_d.png", "8_d.png", "9_d.png", "10_d.png", "11_d.png", "12_d.png", "13_d.png", ]
+ 
 
 
 
