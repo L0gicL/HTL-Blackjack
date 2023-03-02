@@ -61,18 +61,17 @@ def handlewin(player):
             if (i == player):
                 i.money += betpool
             if (i.money <= 0):
-                delete_user(i.username)
+                safefile.delete_user(i.username)
 
     showendscreen(player)
 
 def showendscreen(winner):
     if(winner == 2):
-        #send draw
         pass
     else:
         #send win to winner lose to loser
         #showleaderboard(need fileIO module)
-        server.send(user_leaderboard_wins())
+        server.send(safefile.user_leaderboard_wins())
         pass
 
 
@@ -106,7 +105,7 @@ while(mode == 0):
             inputusername = server.receive(Clientconnections[i]) #get input for username from network
             inputpassword = server.receive(Clientconnections[i]) #get input for password from network
             players[i] = player(inputusername,inputpassword) 
-            adduser(players[i])
+            safefile.create_user(players[i].username, players[i].password)
             break
     if len(players) > 1:
         mode = 1
