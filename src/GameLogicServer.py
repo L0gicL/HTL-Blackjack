@@ -32,12 +32,12 @@ class player:
 def init_cards():
     for i in range(1,53):
         cardorder.append(i)
+    cardvalue.append(11)
     for j in range(4):
         for i in range(2,11):
             cardvalue.append(i)
         for i in range(3):
             cardvalue.append(10)
-        cardvalue.append(11)
 
 def determineCardType(pos):  
     for i in range(4):
@@ -142,7 +142,7 @@ while(mode == 1):
             players[1].score += int(cardvalue[cardpos])
         Cardinfo = determineCardType(cardpos)
         Cardinfo.append(cardpos % 13)
-        Cardinfo.append(cardvalue)
+        Cardinfo.append(cardvalue[cardpos])
         server.send(Clientconnections[activeplayer],Cardinfo)  #send card drawn with score to activeplayer[colour,type,value]
     if(not draw):
         if (activeplayer):
