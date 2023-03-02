@@ -1,11 +1,15 @@
 import sys, os
 import random
+import threading
+import time
 import GameLogicClient
 
 from PyQt6 import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import QPixmap
+from PyQt6 import QtGui
+from PyQt6 import QtCore
 
 '''
     cardinfo = client.receive() #cardinfo how
@@ -199,22 +203,45 @@ class MoneyWindow(QMainWindow):
     def button_clicked(self,player_money, bet_money):
         if (bet_money < player_money):
             GameLogicClient.client.send(bet_money)
+            window.setCurrentWidget(page9)
         else:
             make_message_box("You don't have enough money to make that bet","Not enough money")
-        #TODO special window for waiting
-        your_turn = True
-        while(your_turn):
-            make_message_box("Waiting for other player","Not your turn")
+
+
+
+class WaitingForTurnWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        #set title
+        self.setWindowTitle("Blackjack")
+
+        #set window size
+        self.setFixedSize(QSize(1000, 700))
+
+        #create grid
+        self.Layout = QGridLayout()
+
+        self.label = QLabel()
+        self.label.setText("Waiting for your turn...")
+        self.label.setStyleSheet("font-size: 95px")
+        
+        self.empty_space_01 = QWidget()
+        self.empty_space_01.setFixedSize(800,600)
+        self.Layout.addWidget(self.empty_space_01,0,0)
+        self.Layout.addWidget(self.label,0,0)
+
+        self.widget = QWidget()
+        self.widget.setLayout(self.Layout)
+        self.setCentralWidget(self.widget)
+        
+        self.update()
+
+    def update(self):   #TODO not sure if this works
+        while True:
             if(GameLogicClient.client.receive() == "turn"):
-                your_turn = False
                 window.setCurrentWidget(page5)
-
-
-
-
-
-
-
+                break
 
 
 class LeaderboardWindow(QMainWindow):
@@ -706,7 +733,7 @@ window.addWidget(page7)
 page8 = RegOrLogWindow()
 window.addWidget(page8)
 
-page9 = #"Wait for your turn" window
+page9 = WaitingForTurnWindow()
 window.addWidget(page9)
 
 

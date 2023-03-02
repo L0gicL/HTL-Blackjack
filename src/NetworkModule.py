@@ -31,7 +31,7 @@ class Client_Net(Network):
     
     #recieve function for client without the need for a connection argument
     def receive(self, buffer_size=1024):
-        return super().recieve([self.connection], buffer_size)
+        return super().receive([self.connection], buffer_size)
     
     #function to connect to server
     def client_Connect(self,ip,port):
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     def serverTest():
         server = Server_Net()
         client1 = server.server_Listen(IP,PORT)
-        print(server.recieve(client1))
+        print(server.receive(client1))
         server.send(client1, "Hello from Server!")
     t = threading.Thread(target=serverTest)
     t.start()
@@ -71,5 +71,5 @@ if __name__ == '__main__':
     client = Client_Net()
     client.client_Connect(IP,PORT)
     client.send("Hello from Client!")
-    print(client.recieve())
+    print(client.receive())
     t.join()
