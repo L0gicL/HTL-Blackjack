@@ -1,5 +1,6 @@
 from random import shuffle
 from NetworkModule import Server_Net
+import safefile
 
 IP = '0.0.0.0'
 PORT = 42069
@@ -13,10 +14,11 @@ cards = []
 cardvalue = []
 cardorder = []
 winscore = 21
+path = 'savefile.txt'
 
 #Class init
 class player:
-    def __init__(self, username, password,bet = 0, lost = False, stand = False, score = 0, wins = 0, losses = 0,money = 250):
+    def __init__(self, username, password, money = 250, wins = 0, losses = 0, bet = 0, lost = False, stand = False, score = 0):
         self.username = username
         self.password = password
         self.bet = bet
@@ -30,12 +32,12 @@ class player:
 def init_cards():
     for i in range(1,53):
         cardorder.append(i)
+    cardvalue.append(11)
     for j in range(4):
         for i in range(2,11):
             cardvalue.append(i)
         for i in range(3):
             cardvalue.append(10)
-        cardvalue.append(11)
 
 def determineCardType(pos):  
     for i in range(4):
@@ -59,40 +61,33 @@ def handlewin(player):
         for i in players:
             if (i == player):
                 i.money += betpool
+                i.wins += 1
+            else:
+                i.losses += 1
             if (i.money <= 0):
-                deleteuser(i)
-
+                safefile.delete_user(path,i.username)
+            else:
+                safefile.update_user(path,i.suername)
     showendscreen(player)
 
 def showendscreen(winner):
     if(winner == 2):
-        #send draw
         pass
     else:
         #send win to winner lose to loser
-        #showleaderboard(need fileIO module)
-        pass
+        for i in players:
+            if (winner == i):
+                server.send(Clientconnections[i],'1')
+            else:
+                server.send(Clientconnections[i],'0')
+        scoreboard = safefile.user_leaderboard_wins(path)
+        #send scoreboardlist
+        for i in Clientconnections:
+            server.send(Clientconnections[i],scoreboard)
 
-def deleteuser(user):
-    #need fileIO module
-    pass
-        
-def createuser(user):
-    #need fileIO module
-    pass
 
-def updateuser(user):
-    #need fileIO module
-    pass
-
-def loginuser(user):
-    #need fileIO module
-    pass
-
-'''
-pull data from save file
-'''
 server = Server_Net()
+playercount = 0
 #Login Process
 while(mode == 0):
     for i in range():
@@ -101,23 +96,22 @@ while(mode == 0):
         #get login variable from network
         if (loginornew == 0):
             inputusername = server.receive(Clientconnections[i])
-            if (inputusername in usernames):
-                password = getpassforuser(inputusername)
-                inputpassword = server.receive(Clientconnections[i]) #get input for password from network
-                if (inputpassword == password):
-                    players[i] = player(inputusername,inputpassword)
-                    server.send(Clientconnections[i],'user_ok')
-                    break
+            inputpassword = server.receive(Clientconnections[i]) #get input for password from network
+            data = safefile.user_login(path,inputusername,inputpassword)
+            if (data == 0):
+                    server.send(Clientconnections[i],'no_user')
             else:
-                server.send(Clientconnections[i],'no_user')
-                continue
+                server.send(Clientconnections[i],'user_ok')
+                players[i] = player(inputusername, inputpassword, data[1], data[2], data[3])
+                playercount += 1
+
         elif (loginornew == 1):
             inputusername = server.receive(Clientconnections[i]) #get input for username from network
             inputpassword = server.receive(Clientconnections[i]) #get input for password from network
             players[i] = player(inputusername,inputpassword) 
-            adduser(players[i])
+            safefile.create_user(path,players[i].username, players[i].password)
             break
-    if len(players) > 1:
+    if playercount >= 2:
         mode = 1
 
 turn = 1
@@ -126,6 +120,7 @@ betpool = 0
 #Game Loop
 while(mode == 1):     
     if (turn <= 2):
+        server.send(players[activeplayer].money)
         betamount = server.receive(Clientconnections[turn-1])
         players[activeplayer].bet = betamount
         players[activeplayer].money -= betamount
@@ -146,7 +141,8 @@ while(mode == 1):
         elif (not activeplayer):
             players[1].score += int(cardvalue[cardpos])
         Cardinfo = determineCardType(cardpos)
-        Cardinfo.append()
+        Cardinfo.append(cardpos % 13)
+        Cardinfo.append(cardvalue[cardpos])
         server.send(Clientconnections[activeplayer],Cardinfo)  #send card drawn with score to activeplayer[colour,type,value]
     if(not draw):
         if (activeplayer):

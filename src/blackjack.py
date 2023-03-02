@@ -2,34 +2,16 @@ import sys, os
 import random
 import GameLogicClient
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
 from PyQt6 import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QPropertyAnimation, QPoint
 from PyQt6.QtGui import QPixmap
 
 '''
-while (mode == 1):
-    if (cnt == 0):
-        playerbet = #amount from gui
-        client.send(playerbet)
-        cnt = 1
-
-    playerturn = client.recieve()
-    if (playerturn == 'turn'):
-        #gui: its your turn
-        playerturn = 'notturn'
-    
-    playeraction = #action from gui either draw or stand
-    client.send(playeraction)
-
-    cardinfo = client.recieve() #cardinfo how
+    cardinfo = client.receive() #cardinfo how
     #gui cardinfo
 
-    #when game ends set cnt=0
+    #win or loss still missing
 '''
 
 
@@ -188,7 +170,7 @@ class MoneyWindow(QMainWindow):
         self.Layout.addWidget(self.deal_button,5,6)
         self.deal_button.setFixedSize(300, 120)
         self.deal_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
-        self.deal_button.clicked.connect(self.button_clicked)
+        self.deal_button.clicked.connect(lambda: self.button_clicked(your_money, bet_money))
 
         self.my_money = QLabel(f"{your_money}$")
         font = self.my_money.font()
@@ -214,9 +196,18 @@ class MoneyWindow(QMainWindow):
         self.setCentralWidget(self.widget)
 
 
-    def button_clicked(self):
-        window.setCurrentWidget(page5)
-
+    def button_clicked(self,player_money, bet_money):
+        if (bet_money < player_money):
+            GameLogicClient.client.send(bet_money)
+        else:
+            make_message_box("You don't have enough money to make that bet","Not enough money")
+        #TODO special window for waiting
+        your_turn = True
+        while(your_turn):
+            make_message_box("Waiting for other player","Not your turn")
+            if(GameLogicClient.client.receive() == "turn"):
+                your_turn = False
+                window.setCurrentWidget(page5)
 
 
 
@@ -290,6 +281,7 @@ class CreditsWindow(QMainWindow):
 
 
     def button_clicked(self):
+        make_message_box("test1","test2")
         window.setCurrentWidget(page1)
 
 
@@ -370,6 +362,10 @@ class GameWindow(QMainWindow):
         self.player_card.setIconSize(QtCore.QSize(70,100))
         self.player_cards.append(self.player_card)
         self.game()
+        GameLogicClient.client.send(True)
+        cardinfo = GameLogicClient.client.receive()
+        print(cardinfo)#debug
+        #need info how cards are saved
 
 
 
@@ -380,6 +376,7 @@ class GameWindow(QMainWindow):
         self.dealer_cards.append(self.dealer_card)
 
         self.game()
+        GameLogicClient.client.send(False)
 
 
 
@@ -422,9 +419,9 @@ class LoginWindow(QMainWindow):
 
         #create inputs Name, E-Mail
         self.name = QLineEdit(self)
-        self.name.setMaxLength(10)
+        self.name.setMaxLength(25)
         self.password = QLineEdit(self)
-        self.password.setMaxLength(16)
+        self.password.setMaxLength(128)
         self.password.setEchoMode(QLineEdit.EchoMode.Password)
 
         counter = 0
@@ -458,9 +455,17 @@ class LoginWindow(QMainWindow):
             return
         
         else:
-            window.setCurrentWidget(page2)
             GameLogicClient.login(self.name.text(),self.password.text(),0)
-
+            checkuser = GameLogicClient.client.receive()
+            if (checkuser == 'no_user'):
+                make_message_box("User does not exist!","Error")
+                #open window no user register first
+            elif (checkuser == 'wrong_password'):
+                make_message_box("Password is incorrect!","Error")
+                #open window wrong password
+            elif (checkuser == 'user_ok'):
+                window.setCurrentWidget(page2)
+                #go on with game
 
 
 
@@ -498,12 +503,12 @@ class RegisterWindow(QMainWindow):
 
         #create inputs Name, E-Mail
         self.name = QLineEdit(self)
-        self.name.setMaxLength(10)
+        self.name.setMaxLength(25)
         self.password = QLineEdit(self)
-        self.password.setMaxLength(16)
+        self.password.setMaxLength(128)
         self.password.setEchoMode(QLineEdit.EchoMode.Password)
         self.password2 = QLineEdit(self)
-        self.password2.setMaxLength(16)
+        self.password2.setMaxLength(128)
         self.password2.setEchoMode(QLineEdit.EchoMode.Password)
 
         counter = 0
@@ -547,7 +552,13 @@ class RegisterWindow(QMainWindow):
         
         else:
             window.setCurrentWidget(page2)
-            GameLogicClient.register(self.name.text(),self.password.text(),1)
+            if (self.name.text() != self.password.text()):
+                GameLogicClient.register(self.name.text(),self.password.text(),1)
+            else:
+                make_message_box("Username and Password can't be the same","ERROR")
+                #message 'username & password shouldnt be the same
+                return
+            
 
 
 
@@ -594,7 +605,7 @@ class RegOrLogWindow(QMainWindow):
         self.address = QLineEdit(self)
         self.Layout.addWidget(self.address,1,1)
 
-        self.confirm_button = QPushButton("CONFIRM")
+        self.confirm_button = QPushButton("CONNECT")
         self.confirm_button.setFixedSize(180, 40)
         self.confirm_button.setStyleSheet("font: bold;background-color: white;font-size: 36px;")
         self.confirm_button.clicked.connect(self.confirm)
@@ -625,8 +636,7 @@ class RegOrLogWindow(QMainWindow):
         window.setCurrentWidget(page1)
 
     def confirm(self):
-        ip = self.address.text()
-
+        GameLogicClient.connect_to_server(self.address.text())
 
 
 
@@ -640,6 +650,11 @@ diamonds = ["1_d.png", "2_d.png", "3_d.png", "4_d.png", "5_d.png", "6_d.png", "7
 
 
 
+def make_message_box(msg:str,header:str):
+    message = QMessageBox()
+    message.setWindowTitle(header)
+    message.setText(msg)
+    message.exec()
 
 
 
@@ -694,6 +709,8 @@ window.addWidget(page7)
 page8 = RegOrLogWindow()
 window.addWidget(page8)
 
+page9 = #"Wait for your turn" window
+window.addWidget(page9)
 
 
 
